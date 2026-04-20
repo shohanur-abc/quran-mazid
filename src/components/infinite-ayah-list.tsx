@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ReactNode, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { AyahCard, AyahCardSkeleton } from "@/components/ayah-card";
@@ -57,17 +58,43 @@ export function InfiniteAyahList({ globalStart, globalEnd, displayTitle, initial
     const allAyahs = data?.pages.flatMap((page) => page) ?? [];
 
     const [scrollElement, setScrollElement] = useState<HTMLElement | null>(null);
+    const [highlightQuery, setHighlightQuery] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         setScrollElement(document.getElementById("main-scroll-container"));
     }, []);
 
     const virtualizer = useVirtualizer({
-        count: hasNextPage ? allAyahs.length + 1 : allAyahs.length,
+        count: totalAyahs,
         getScrollElement: () => scrollElement,
         estimateSize: () => 300, // Estimated height of an AyahCard in pixels
         overscan: 6, // Render 3 items outside of the visible area
     });
+
+    useEffect(() => {
+        if (!scrollElement) return;
+
+        const params = new URLSearchParams(window.location.search);
+        const scrollTo = params.get("scrollTo");
+        const query = params.get("q");
+
+        if (query) {
+            setHighlightQuery(query);
+        }
+
+        if (scrollTo) {
+            // Find the index of the ayah with the matching globalIndex
+            // In our case, the index in the list is simply globalIndex - globalStart
+            const targetIndex = parseInt(scrollTo, 10) - globalStart;
+
+            if (targetIndex >= 0 && targetIndex < totalAyahs) {
+                // Delay slightly to allow virtualizer to compute properly
+                setTimeout(() => {
+                    virtualizer.scrollToIndex(targetIndex, { align: "center" });
+                }, 100);
+            }
+        }
+    }, [scrollElement, globalStart, totalAyahs]); // Note: removing virtualizer from deps so it only runs once per mount/scrollElement
 
     const items = virtualizer.getVirtualItems();
 
@@ -154,6 +181,7 @@ export function InfiniteAyahList({ globalStart, globalEnd, displayTitle, initial
                                         onShare={() => toast.info('Inshallah, Share feature coming soon!')}
                                         onPlay={() => toast.info('Inshallah, Play feature coming soon!')}
                                         onTafsir={() => toast.info('Inshallah, Tafsir feature coming soon!')}
+                                        highlightQuery={highlightQuery}
                                     />
                                 )
                             )}

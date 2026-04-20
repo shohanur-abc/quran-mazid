@@ -61,8 +61,8 @@ export function SearchDialog({
 
   const onSelect = (result: SearchResult) => {
     setOpen(false);
-    // Smooth scroll if they happen to already be on the Surah, else standard navigation 
-    router.push(`/${result.surahNumber}#ayah-card-${result.surahNumber}:${result.ayahNumber}`);
+    // Add scrollTo and q params to the URL for virtual list scrolling and text highlighting
+    router.push(`/${result.surahNumber}?scrollTo=${result.globalIndex}&q=${encodeURIComponent(query)}`);
   };
 
   return (

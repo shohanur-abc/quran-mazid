@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+// mongoose is not imported since we use MongoClient
 import { MongoClient } from "mongodb";
 import fs from "fs/promises";
 import path from "path";

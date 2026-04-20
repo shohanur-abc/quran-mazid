@@ -15,24 +15,48 @@ export type AyahWord = {
 export interface AyahArabicTextProps {
     words?: AyahWord[];
     arabicText?: string;
+    wordByWord?: boolean;
 }
-
 
 export function AyahArabicText({
     words,
     arabicText,
+    wordByWord = true, // Default to true based on user request, or make it configurable
 }: AyahArabicTextProps) {
     return (
-        <p
+        <div
             dir="rtl"
-            // data-font="uthmani"
-            className="mb-4 text-right font-arabic"
+            className={cn(
+                "mb-4 text-right font-arabic",
+                wordByWord ? "flex flex-wrap gap-x-5 gap-y-8 leading-normal" : "leading-loose"
+            )}
             style={{
                 fontSize: "var(--arabic-font-size)",
             }}
         >
             {words?.length ? (
                 words.map((word, index) => {
+                    if (wordByWord) {
+                        return (
+                            <div key={word.id} className="group inline-flex flex-col items-center justify-start cursor-pointer" onClick={word.onClick}>
+                                <span
+                                    data-uthmani={word.text}
+                                    className={cn(
+                                        "transition-colors",
+                                        word.highlighted ? "text-primary" : "group-hover:text-primary"
+                                    )}
+                                >
+                                    {word.text}
+                                </span>
+                                {word.tooltip && (
+                                    <span className="text-sm text-center text-muted-foreground mt-2 font-sans font-normal" style={{ fontSize: "1rem", lineHeight: "1.4" }}>
+                                        {word.tooltip}
+                                    </span>
+                                )}
+                            </div>
+                        );
+                    }
+
                     const content = (
                         <span
                             data-uthmani={word.text}
@@ -64,12 +88,6 @@ export function AyahArabicText({
             ) : (
                 arabicText
             )}
-
-            {/* {verseNumber ? (
-                <span className="mx-3 font-ayat text-5xl">
-                    {verseNumber}
-                </span>
-            ) : null} */}
-        </p>
+        </div>
     );
 }

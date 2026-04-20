@@ -5,11 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import metadata from "../../../public/metadata.json";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { SurahCard } from "../surah-card";
 
-export function LeftSidebar({ isMobile }: { isMobile?: boolean }) {
-    const router = useRouter();
+export function LeftSidebar() {
+
     const pathname = usePathname() || "";
     const [activeTab, setActiveTab] = useState<"surah" | "juz" | "page">("surah");
     const [searchQuery, setSearchQuery] = useState("");
@@ -28,10 +28,6 @@ export function LeftSidebar({ isMobile }: { isMobile?: boolean }) {
 
     const filteredJuzs = juzs.filter((j) => !searchQuery || String(j?.juzNumber) === searchQuery);
     const filteredPages = pages.filter((p) => !searchQuery || String(p?.pageNumber) === searchQuery);
-
-    const handleNavigate = (path: string) => {
-        router.push(path);
-    };
 
     const isActive = (path: string) => {
         if (pathname === path) return true;

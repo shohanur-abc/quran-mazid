@@ -1,4 +1,5 @@
 import * as React from "react";
+import { HighlightText } from "@/components/ui/highlight-text";
 
 export type AyahTranslation = {
     id: string | number;
@@ -8,9 +9,10 @@ export type AyahTranslation = {
 
 export interface AyahTranslationsProps {
     translations: AyahTranslation[];
+    highlightQuery?: string;
 }
 
-export function AyahTranslations({ translations }: AyahTranslationsProps) {
+export function AyahTranslations({ translations, highlightQuery }: AyahTranslationsProps) {
     return (
         <div className="space-y-4">
             {translations.map((translation) => (
@@ -22,7 +24,7 @@ export function AyahTranslations({ translations }: AyahTranslationsProps) {
                         className=""
                         style={{ fontSize: "var(--translation-font-size)" }}
                     >
-                        {translation.text}
+                        <HighlightText text={translation.text} query={highlightQuery} />
                     </p>
                 </div>
             ))}

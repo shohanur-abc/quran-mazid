@@ -30,6 +30,7 @@ export interface AyahCardProps {
     onCopyLink?: () => void;
     onShare?: () => void;
     extraMenuActions?: AyahMenuAction[];
+    highlightQuery?: string;
 }
 
 
@@ -48,6 +49,7 @@ export function AyahCard({
     onCopyLink,
     onShare,
     extraMenuActions = [],
+    highlightQuery,
 }: AyahCardProps) {
     const menuActions: AyahMenuAction[] = [
         {
@@ -112,7 +114,7 @@ export function AyahCard({
 
                         />
 
-                        <AyahTranslations translations={translations} />
+                        <AyahTranslations translations={translations} highlightQuery={highlightQuery} />
                     </div>
                 </div>
             </div>
