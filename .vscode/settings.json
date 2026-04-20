@@ -1,0 +1,103 @@
+{
+    "editor.tabSize": 4,
+    "todo-tree.general.tags": [
+        "TODO",
+        "FIXME",
+        "HACK",
+        "BUG",
+        "PERF",
+        "NOTE",
+        "REVIEW",
+        "WARN",
+        "READ",
+        "CREATE",
+        "UPDATE",
+        "DELETE"
+    ],
+    "todo-tree.highlights.defaultHighlight": {
+        "icon": "alert",
+        "type": "text-and-comment",
+        "foreground": "#fff",
+        "background": "#e67d229f",
+        "iconColour": "#e67e22"
+    },
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "check",
+            "foreground": "#fff",
+            "background": "#3498db8a",
+            "iconColour": "#3498db"
+        },
+        "FIXME": {
+            "icon": "flame",
+            "foreground": "#fff",
+            "background": "#e74d3cae",
+            "iconColour": "#e74c3c"
+        },
+        "BUG": {
+            "icon": "bug",
+            "foreground": "#fff",
+            "background": "#c03a2b96",
+            "iconColour": "#c0392b"
+        },
+        "HACK": {
+            "icon": "tools",
+            "foreground": "#fff",
+            "background": "#8d44ad96",
+            "iconColour": "#8e44ad"
+        },
+        "PERF": {
+            "icon": "rocket",
+            "foreground": "#fff",
+            "background": "#27ae5f88",
+            "iconColour": "#27ae60"
+        },
+        "NOTE": {
+            "icon": "info",
+            "foreground": "#fff",
+            "background": "#2ecc7077",
+            "iconColour": "#2ecc71"
+        },
+        "REVIEW": {
+            "icon": "eye",
+            "foreground": "#fff",
+            "background": "#f39d1291",
+            "iconColour": "#f39c12"
+        },
+        "READ": {
+            "icon": "book",
+            "foreground": "#fff",
+            "background": "#2980b9a6",
+            "iconColour": "#2980b9"
+        },
+        "CREATE": {
+            "icon": "plus",
+            "foreground": "#fff",
+            "background": "#27ae60a6",
+            "iconColour": "#27ae60"
+        },
+        "UPDATE": {
+            "icon": "versions",
+            "foreground": "#fff",
+            "background": "#f39c12a6",
+            "iconColour": "#f39c12"
+        },
+        "DELETE": {
+            "icon": "trash",
+            "foreground": "#fff",
+            "background": "#c0392ba6",
+            "iconColour": "#c0392b"
+        }
+    },
+    "todo-tree.general.statusBar": "tags",
+    "tailwindCSS.experimental.classRegex": [
+        [
+            "cva\\(([^)]*)\\)",
+            "'([^']*)'"
+        ],
+        [
+            "cn\\(([^)]*)\\)",
+            "'([^']*)'"
+        ]
+    ]
+}
