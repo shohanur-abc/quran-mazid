@@ -6,6 +6,7 @@ import { AyahActionsMobile, AyahMenuAction } from "./ayah-actions-mobile";
 import { AyahActionsDesktop } from "./ayah-actions-desktop";
 import { AyahArabicText, AyahWord } from "./ayah-arabic-text";
 import { AyahTranslations, AyahTranslation } from "./ayah-translations";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 export * from "./rail-icon-button";
 export * from "./ayah-actions-mobile";
@@ -51,6 +52,21 @@ export function AyahCard({
     extraMenuActions = [],
     highlightQuery,
 }: AyahCardProps) {
+    const [showWordByWord] = useLocalStorage<boolean>("show-word-by-word", true);
+    const [selectedTranslations] = useLocalStorage<string[]>("selected-translations", ["bengali"]);
+    const [wbwTranslationLang] = useLocalStorage<string>("wbw-translation-lang", "bengali");
+
+    const filteredTranslations = translations.filter(t => selectedTranslations.includes((t as any).language === "bn" ? "bengali" : "english"));
+    
+    // Add WbW translations to the words
+    const mappedWords = words?.map(word => {
+        const wbw = (word as any).translations?.find((t: any) => typeof t.translation_id === "number" && (wbwTranslationLang === "bengali" && t.translation_id === 161 || wbwTranslationLang === "english" && t.translation_id === 20));
+        return {
+            ...word,
+            tooltip: wbw ? wbw.text : word.tooltip
+        }
+    });
+
     const menuActions: AyahMenuAction[] = [
         {
             label: "Copy Ayah",
@@ -109,12 +125,12 @@ export function AyahCard({
 
                     <div >
                         <AyahArabicText
-                            words={words}
+                            words={mappedWords || words}
                             arabicText={arabicText}
-
+                            wordByWord={showWordByWord}
                         />
 
-                        <AyahTranslations translations={translations} highlightQuery={highlightQuery} />
+                        <AyahTranslations translations={filteredTranslations} highlightQuery={highlightQuery} />
                     </div>
                 </div>
             </div>

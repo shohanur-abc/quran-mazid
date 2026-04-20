@@ -11,77 +11,37 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 export function RightSidebar({ }: { isMobile?: boolean } = {}) {
     const [mounted, setMounted] = useState(false);
-    const [arabicFontSize, setArabicFontSize] = useState<number>(32);
-    const [translationFontSize, setTranslationFontSize] = useState<number>(18);
-    const [arabicFontFace, setArabicFontFace] = useState<string>("uthmani");
+    const [arabicFontSize, setArabicFontSize] = useLocalStorage<number>("arabic-font-size", 32);
+    const [translationFontSize, setTranslationFontSize] = useLocalStorage<number>("translation-font-size", 18);
+    const [arabicFontFace, setArabicFontFace] = useLocalStorage<string>("arabic-font-face", "uthmani");
 
-    const [selectedTranslations, setSelectedTranslations] = useState<string[]>(["bengali"]);
-    const [wbwTranslationLang, setWbwTranslationLang] = useState<string>("bengali");
-    const [showWordByWord, setShowWordByWord] = useState<boolean>(true);
-    const [showTajweed, setShowTajweed] = useState<boolean>(false);
+    const [selectedTranslations, setSelectedTranslations] = useLocalStorage<string[]>("selected-translations", ["bengali"]);
+    const [wbwTranslationLang, setWbwTranslationLang] = useLocalStorage<string>("wbw-translation-lang", "bengali");
+    const [showWordByWord, setShowWordByWord] = useLocalStorage<boolean>("show-word-by-word", true);
+    const [showTajweed, setShowTajweed] = useLocalStorage<boolean>("show-tajweed", false);
 
     useEffect(() => {
-        const storedAraSize = localStorage.getItem("arabic-font-size");
-        const storedTransSize = localStorage.getItem("translation-font-size");
-        const storedFace = localStorage.getItem("arabic-font-face");
-
-        const storedTrans = localStorage.getItem("selected-translations");
-        const storedWbwLang = localStorage.getItem("wbw-translation-lang");
-        const storedShowWbw = localStorage.getItem("show-word-by-word");
-        const storedTajweed = localStorage.getItem("show-tajweed");
-
-        if (storedAraSize) setTimeout(() => setArabicFontSize(Number(storedAraSize)), 0);
-        if (storedTransSize) setTimeout(() => setTranslationFontSize(Number(storedTransSize)), 0);
-        if (storedFace) setTimeout(() => setArabicFontFace(storedFace), 0);
-
-        if (storedTrans) setTimeout(() => setSelectedTranslations(JSON.parse(storedTrans)), 0);
-        if (storedWbwLang) setTimeout(() => setWbwTranslationLang(storedWbwLang), 0);
-        if (storedShowWbw) setTimeout(() => setShowWordByWord(storedShowWbw === "true"), 0);
-        if (storedTajweed) setTimeout(() => setShowTajweed(storedTajweed === "true"), 0);
-
         setTimeout(() => setMounted(true), 0);
     }, []);
 
     useEffect(() => {
         if (!mounted) return;
         document.documentElement.style.setProperty("--arabic-font-size", `${arabicFontSize}px`);
-        localStorage.setItem("arabic-font-size", String(arabicFontSize));
     }, [arabicFontSize, mounted]);
 
     useEffect(() => {
         if (!mounted) return;
         document.documentElement.style.setProperty("--translation-font-size", `${translationFontSize}px`);
-        localStorage.setItem("translation-font-size", String(translationFontSize));
     }, [translationFontSize, mounted]);
 
     useEffect(() => {
         if (!mounted) return;
         document.documentElement.setAttribute("data-font", arabicFontFace);
-        localStorage.setItem("arabic-font-face", arabicFontFace);
     }, [arabicFontFace, mounted]);
-
-    useEffect(() => {
-        if (!mounted) return;
-        localStorage.setItem("selected-translations", JSON.stringify(selectedTranslations));
-    }, [selectedTranslations, mounted]);
-
-    useEffect(() => {
-        if (!mounted) return;
-        localStorage.setItem("wbw-translation-lang", wbwTranslationLang);
-    }, [wbwTranslationLang, mounted]);
-
-    useEffect(() => {
-        if (!mounted) return;
-        localStorage.setItem("show-word-by-word", String(showWordByWord));
-    }, [showWordByWord, mounted]);
-
-    useEffect(() => {
-        if (!mounted) return;
-        localStorage.setItem("show-tajweed", String(showTajweed));
-    }, [showTajweed, mounted]);
 
     // Don't render content until mounted to prevent hydration mismatches
     if (!mounted) {
@@ -107,7 +67,7 @@ export function RightSidebar({ }: { isMobile?: boolean } = {}) {
                 <ScrollArea className="flex-1">
                     <TabsContent value="translation" className="m-0 p-4 outline-none space-y-6">
 
-                        <Accordion type="multiple" defaultValue={["font-settings"]} className="w-full rounded-md">
+                        <Accordion type="single" defaultValue={"font-settings"} className="w-full rounded-md">
 
                             <AccordionItem value="reading-settings" className="bg-card shadow-sm">
                                 <AccordionTrigger className="hover:no-underline py-4">
@@ -169,12 +129,12 @@ export function RightSidebar({ }: { isMobile?: boolean } = {}) {
 
                                         <div className="flex items-center justify-between">
                                             <Label className="text-base font-medium text-foreground cursor-pointer" htmlFor="show-wbw-toggle">Show by words</Label>
-                                            <Switch className="data-[state=checked]:bg-green-600" id="show-wbw-toggle" checked={showWordByWord} onCheckedChange={setShowWordByWord} />
+                                            <Switch id="show-wbw-toggle" checked={showWordByWord} onCheckedChange={setShowWordByWord} />
                                         </div>
 
                                         <div className="flex items-center justify-between">
-                                            <Label className="text-base font-medium text-foreground cursor-pointer" htmlFor="show-tajweed-toggle">Tajweed</Label>
-                                            <Switch className="data-[state=checked]:bg-green-600" id="show-tajweed-toggle" checked={showTajweed} onCheckedChange={setShowTajweed} />
+                                            <Label className="text-base font-medium text-muted-foreground cursor-pointer" htmlFor="show-tajweed-toggle">Tajweed</Label>
+                                            <Switch id="show-tajweed-toggle" disabled checked={showTajweed} onCheckedChange={setShowTajweed} />
                                         </div>
                                     </div>
                                 </AccordionContent>

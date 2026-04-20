@@ -68,7 +68,7 @@ export function InfiniteAyahList({ globalStart, globalEnd, displayTitle, initial
         count: totalAyahs,
         getScrollElement: () => scrollElement,
         estimateSize: () => 300, // Estimated height of an AyahCard in pixels
-        overscan: 6, // Render 3 items outside of the visible area
+        overscan: 10, // Render 3 items outside of the visible area
     });
 
     useEffect(() => {
@@ -175,12 +175,12 @@ export function InfiniteAyahList({ globalStart, globalEnd, displayTitle, initial
                                         words={ayah.words}
                                         translations={ayah.translations}
                                         verseNumber={ayah.ayahNumber}
-                                        onBookmark={() => toast.info('Inshallah, Bookmark feature coming soon!')}
-                                        onCopyAyah={() => toast.info('Inshallah, Copy Ayah feature coming soon!')}
-                                        onCopyLink={() => toast.info('Inshallah, Copy Link feature coming soon!')}
-                                        onShare={() => toast.info('Inshallah, Share feature coming soon!')}
-                                        onPlay={() => toast.info('Inshallah, Play feature coming soon!')}
-                                        onTafsir={() => toast.info('Inshallah, Tafsir feature coming soon!')}
+                                        onBookmark={() => toast.info('this feature isnt implemented yet')}
+                                        onCopyAyah={() => toast.info('this feature isnt implemented yet')}
+                                        onCopyLink={() => toast.info('this feature isnt implemented yet')}
+                                        onShare={() => toast.info('this feature isnt implemented yet')}
+                                        onPlay={() => toast.info('this feature isnt implemented yet')}
+                                        onTafsir={() => toast.info('this feature isnt implemented yet')}
                                         highlightQuery={highlightQuery}
                                     />
                                 )
