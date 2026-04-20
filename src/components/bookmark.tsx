@@ -174,7 +174,7 @@ export function BookmarkModal({ open, onOpenChange, ayahKey }: BookmarkModalProp
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-md bg-card border-border text-foreground shadow-xl">
+            <DialogContent className="@3xl:max-w-md bg-card border-border text-foreground shadow-xl">
                 <DialogHeader>
                     <DialogTitle className="text-center font-normal">Add to Collections</DialogTitle>
                 </DialogHeader>

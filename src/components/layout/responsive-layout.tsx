@@ -7,7 +7,7 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex flex-1 overflow-hidden h-full">
             {/* Left Sidebar (Desktop/Tablet) */}
-            <aside className="hidden md:flex w-80 flex-col border-r border-border/5 shrink-0 overflow-hidden">
+            <aside className="hidden @3xl:flex w-80 flex-col border-r border-border/5 shrink-0 overflow-hidden">
                 <LeftSidebar />
             </aside>
 
@@ -19,7 +19,7 @@ export function ResponsiveLayout({ children }: { children: React.ReactNode }) {
             </main>
 
             {/* Right Sidebar (Desktop) */}
-            <aside className="hidden xl:flex w-80 flex-col border-l border-border/5 shrink-0 overflow-hidden">
+            <aside className="hidden @7xl:flex w-80 flex-col border-l border-border/5 shrink-0 overflow-hidden">
                 <RightSidebar />
             </aside>
         </div>

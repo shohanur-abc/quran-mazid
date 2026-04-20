@@ -63,12 +63,12 @@ export default function Home() {
     const hizbQuarters = metaData.hizb.slice(1).map(h => h!.hizbNumber);
 
     return (
-        <div className="bg-background min-h-screen text-foreground font-sans p-4 md:p-8 max-w-7xl mx-auto">
+        <div className="bg-background min-h-screen text-foreground font-sans p-4 @3xl:p-8 max-w-7xl mx-auto">
             <Tabs defaultValue="surah" className="w-full">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 gap-4">
+                <div className="flex flex-col @3xl:flex-row items-start @3xl:items-center justify-between mb-4 gap-4">
                     {/* <h1 className="text-3xl font-bold tracking-tight">Quran Mazid</h1> */}
-                    <div className="w-full md:w-auto overflow-x-auto ml-auto">
-                        <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-auto mb-2 md:mb-0 whitespace-nowrap">
+                    <div className="w-full @3xl:w-auto overflow-x-auto ml-auto">
+                        <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-auto mb-2 @3xl:mb-0 whitespace-nowrap">
                             <TabsTrigger value="surah">Surah</TabsTrigger>
                             <TabsTrigger value="juz">Juz</TabsTrigger>
                             <TabsTrigger value="page">Page</TabsTrigger>
@@ -81,7 +81,7 @@ export default function Home() {
                 </div>
 
                 <TabsContent value="surah">
-                    <ShowMoreWrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full" initialCount={30} step={100}>
+                    <ShowMoreWrapper className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-3 gap-4 w-full" initialCount={30} step={100}>
                         {surahs.map((idx) => (
                             <SurahCard
                                 key={idx.surahNumber}
@@ -96,7 +96,7 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="juz">
-                    <ShowMoreWrapper className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-3 w-full" initialCount={20} step={10}>
+                    <ShowMoreWrapper className="columns-1 @3xl:columns-2 @5xl:columns-3 @7xl:columns-4 gap-3 w-full" initialCount={20} step={10}>
                         {juzData.map((idx) => (
                             <div key={idx.juz} className="break-inside-avoid mb-3 bg-muted/20 p-4 rounded-md">
                                 <h3 className="text-primary font-bold text-sm mb-4">Juz {String(idx.juz).padStart(2, '0')}</h3>
@@ -117,7 +117,7 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="page">
-                    <ShowMoreWrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full" initialCount={50} step={50}>
+                    <ShowMoreWrapper className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-5 gap-4 w-full" initialCount={50} step={50}>
                         {pages.map((idx) => (
                             <SurahCard
                                 key={idx}
@@ -131,7 +131,7 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="ruku">
-                    <ShowMoreWrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full" initialCount={50} step={50}>
+                    <ShowMoreWrapper className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-5 gap-4 w-full" initialCount={50} step={50}>
                         {rukus.map((idx) => (
                             <SurahCard
                                 key={idx}
@@ -145,7 +145,7 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="manzil">
-                    <ShowMoreWrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full" initialCount={7} step={7}>
+                    <ShowMoreWrapper className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-5 gap-4 w-full" initialCount={7} step={7}>
                         {manzils.map((idx) => (
                             <SurahCard
                                 key={idx}
@@ -159,7 +159,7 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="hizb">
-                    <ShowMoreWrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full" initialCount={50} step={50}>
+                    <ShowMoreWrapper className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-5 gap-4 w-full" initialCount={50} step={50}>
                         {hizbQuarters.map((idx) => (
                             <SurahCard
                                 key={idx}
@@ -173,7 +173,7 @@ export default function Home() {
                 </TabsContent>
 
                 <TabsContent value="sajda">
-                    <ShowMoreWrapper className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 w-full" initialCount={15} step={15}>
+                    <ShowMoreWrapper className="grid grid-cols-1 @3xl:grid-cols-2 @5xl:grid-cols-3 @7xl:grid-cols-5 gap-4 w-full" initialCount={15} step={15}>
                         {sajdas.map((idx) => (
                             <SurahCard
                                 key={idx}
