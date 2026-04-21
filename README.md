@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📖 Quran Application
 
-## Getting Started
+> A performant, feature-rich Quran reading experience built for everyone — from beginners to advanced readers.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Key Features
+
+### 🧭 Navigation & Reading Modes
+Multiple flexible navigation modes supported:
+- **Surah** — Browse by chapter
+- **Juz** — Navigate by part (1–30)
+- **Page** — Traditional Mushaf page layout
+- **Ruku** — Section-based navigation
+- **Manzil** — Weekly division navigation
+- **Sajda** — Jump to prostration verses
+
+---
+
+### 🎨 Personalization
+Real-time customization with persistent preferences:
+- Adjustable **Arabic font size**
+- Adjustable **Translation font size**
+- Selectable **Font family**
+- All preferences automatically saved via **local storage** — your settings survive page reloads
+
+---
+
+### 📚 Reading Support
+Catering to all levels of readers:
+- **Word-by-Word** mode — ideal for beginners learning Arabic
+- **Full Translation** mode — for comprehension and study
+
+---
+
+### ⚡ Performance & Optimization
+
+| Technique | Benefit |
+|-----------|---------|
+| TanStack Infinite Scrolling | Minimizes unnecessary data fetching, reduces bandwidth |
+| TanStack Virtualization | Keeps DOM lightweight, prevents performance degradation |
+| Static first 10 Ayahs per Surah | Served via CDN for rapid initial page load |
+
+The first 10 ayahs of each Surah are pre-rendered as **static content**, enabling CDN delivery and significantly improving Time-to-First-Byte (TTFB).
+
+---
+
+### 🗄️ Database Architecture
+
+A **dual-database approach** for optimal performance and flexibility:
+
+```
+Client Request
+     │
+     ├──▶ Server-Side DB (O(1) lookup)
+     │         └── Direct data retrieval, low latency
+     │
+     └──▶ MongoDB
+               └── Complex filtering & search queries
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Server-side DB** — handles direct client-to-server data lookup, reducing internet latency
+- **MongoDB** — supports advanced filtering and search, ensuring speed and flexibility
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🔄 Core Data Flow
 
-## Learn More
+```
+1. Client sends request via URL parameters
+         ↓
+2. CDN serves first 10 ayahs instantly (no delay)
+         ↓
+3. User scrolls → subsequent ayahs fetched via O(1) server lookup
+         ↓
+4. Search queries → routed to MongoDB for advanced filtering
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚧 Current Status
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This is an **MVP (Minimum Viable Product)** — a solid, functional foundation.
 
-## Deploy on Vercel
+Several areas are identified for improvement and will be systematically addressed in subsequent iterations to elevate the product to the next level.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Data Fetching | TanStack Query (Infinite Scroll + Virtualization) |
+| Primary Database | Server-side DB (O(1) lookup) |
+| Search Database | MongoDB |
+| Content Delivery | CDN (static ayahs) |
+| Persistence | Local Storage |
+
+---
+
+*Built with care for the Quran. May it be of benefit.* 🤲
