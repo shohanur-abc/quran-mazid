@@ -1,7 +1,9 @@
 import { InfiniteAyahList } from "@/components/infinite-ayah-list";
 import { getAyahs } from "../actions/getAyahs";
-import metadata from "../../../public/metadata.json";
+import quranMetadata from "../../../public/metadata.json";
 import { ReactNode } from "react";
+import type { Metadata } from "next";
+import { isPreviewDeployment, SITE_DESCRIPTION, SITE_NAME } from "@/lib/seo";
 
 type SupportedType = "surah" | "juz" | "page" | "hizb" | "manzil" | "sajda" | "ruku";
 type MetadataEntry = {
@@ -9,6 +11,7 @@ type MetadataEntry = {
     ayahEnd: number;
     nameTransliteration?: string;
     nameArabic?: string;
+    nameMeaning?: string;
 };
 
 const TYPE_INDEX_KEYS: Record<SupportedType, string> = {
@@ -23,10 +26,142 @@ const TYPE_INDEX_KEYS: Record<SupportedType, string> = {
 
 export const dynamicParams = false;
 
+function parseRouteSlug(slug: string[]) {
+    const firstSlug = decodeURIComponent(slug[0] || "").toLowerCase();
+
+    let normalizedType = "";
+    let indexStr = "";
+    let rangeStr = "";
+
+    if (!isNaN(Number(firstSlug))) {
+        normalizedType = "surah";
+        indexStr = firstSlug;
+        rangeStr = slug[1] || "";
+    } else {
+        normalizedType = firstSlug;
+        if (normalizedType === "hizb-quarter" || normalizedType === "hizb quarter") {
+            normalizedType = "hizb";
+        }
+        indexStr = slug[1] || "";
+        rangeStr = slug[2] || "";
+    }
+
+    const index = parseInt(indexStr, 10);
+    const routeType = normalizedType as SupportedType;
+    const isSupportedType = ["surah", "juz", "page", "hizb", "manzil", "sajda", "ruku"].includes(routeType);
+
+    if (!isSupportedType || Number.isNaN(index)) {
+        return {
+            isValid: false,
+            routeType: null,
+            index: null,
+            rangeStr: "",
+            canonicalPath: "/",
+        };
+    }
+
+    const canonicalPath = `/${routeType}/${index}${rangeStr ? `/${rangeStr}` : ""}`;
+
+    return {
+        isValid: true,
+        routeType,
+        index,
+        rangeStr,
+        canonicalPath,
+    };
+}
+
+function getTitleAndDescription(type: SupportedType, index: number, entry: MetadataEntry): { title: string; description: string } {
+    if (type === "surah") {
+        const transliteration = entry.nameTransliteration ?? `Surah ${index}`;
+        const arabicName = entry.nameArabic ? ` (${entry.nameArabic})` : "";
+        const meaning = entry.nameMeaning ? ` — ${entry.nameMeaning}` : "";
+
+        return {
+            title: `${transliteration}${arabicName}`,
+            description: `Read ${transliteration}${meaning} with Arabic text, translation, and navigation support on ${SITE_NAME}.`,
+        };
+    }
+
+    const label = type.charAt(0).toUpperCase() + type.slice(1);
+
+    return {
+        title: `${label} ${index}`,
+        description: `Read and explore ${label} ${index} in the Quran with Arabic text and translations on ${SITE_NAME}.`,
+    };
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ slug: string[] }>;
+}): Promise<Metadata> {
+    const { slug } = await params;
+    const parsed = parseRouteSlug(slug);
+
+    if (!parsed.isValid || parsed.routeType == null || parsed.index == null) {
+        return {
+            title: `Not Found | ${SITE_NAME}`,
+            description: SITE_DESCRIPTION,
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
+    }
+
+    const routeCollection = (quranMetadata as Record<string, MetadataEntry[]>)[parsed.routeType];
+    const entry = routeCollection?.[parsed.index];
+
+    if (!entry) {
+        return {
+            title: `Not Found | ${SITE_NAME}`,
+            description: SITE_DESCRIPTION,
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
+    }
+
+    const { title, description } = getTitleAndDescription(parsed.routeType, parsed.index, entry);
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: parsed.canonicalPath,
+        },
+        openGraph: {
+            title,
+            description,
+            type: "article",
+            url: parsed.canonicalPath,
+            images: ["/opengraph-image"],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: ["/twitter-image"],
+        },
+        robots: isPreviewDeployment()
+            ? {
+                index: false,
+                follow: false,
+                nocache: true,
+            }
+            : {
+                index: true,
+                follow: true,
+            },
+    };
+}
+
 export function generateStaticParams(): { slug: string[] }[] {
     const params: { slug: string[] }[] = [];
 
-    const surahs = metadata.surah.slice(1);
+    const surahs = quranMetadata.surah.slice(1);
     for (const surah of surahs) {
         if (!surah) continue;
         params.push({ slug: [String(surah.surahNumber)] });
@@ -35,7 +170,7 @@ export function generateStaticParams(): { slug: string[] }[] {
 
     const extraTypes: SupportedType[] = ["juz", "page", "hizb", "manzil", "sajda", "ruku"];
     for (const type of extraTypes) {
-        const items = (metadata[type] as Array<Record<string, unknown> | null>).slice(1);
+        const items = (quranMetadata[type] as Array<Record<string, unknown> | null>).slice(1);
         const indexKey = TYPE_INDEX_KEYS[type];
 
         for (const item of items) {
@@ -60,42 +195,15 @@ export default async function DynamicRoute({
 }) {
     const { slug } = await params;
 
-    let type = "";
-    let indexStr = "";
-    let rangeStr = "";
+    const parsed = parseRouteSlug(slug);
 
-    // Parse slug
-    const firstSlug = decodeURIComponent(slug[0] || "").toLowerCase();
-
-    if (!isNaN(Number(firstSlug))) {
-        // e.g. /1 or /1/1:5 (meaning surah 1)
-        type = "surah";
-        indexStr = firstSlug;
-        rangeStr = slug[1] || "";
-    } else {
-        // route with type e.g. /surah/1, /juz/1, /hizb-quarter/1
-        type = firstSlug;
-        // Normalize hizb variations
-        if (type === "hizb-quarter" || type === "hizb quarter") {
-            type = "hizb";
-        }
-        indexStr = slug[1] || "";
-        rangeStr = slug[2] || "";
-    }
-
-    const index = parseInt(indexStr, 10);
-    if (isNaN(index)) {
+    if (!parsed.isValid || parsed.routeType == null || parsed.index == null) {
         return <div>Invalid ID</div>;
     }
 
-    const allowedTypes: SupportedType[] = ["surah", "juz", "page", "hizb", "manzil", "sajda", "ruku"];
-    if (!allowedTypes.includes(type as SupportedType)) {
-        return <div>Unknown Route Type: {type}</div>;
-    }
+    const { routeType, index, rangeStr } = parsed;
 
-    const routeType = type as SupportedType;
-
-    const typeDataArray = (metadata as Record<string, MetadataEntry[]>)[routeType];
+    const typeDataArray = (quranMetadata as Record<string, MetadataEntry[]>)[routeType];
     if (!Array.isArray(typeDataArray)) {
         return <div>Data for {routeType} not found</div>;
     }
