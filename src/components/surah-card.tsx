@@ -13,7 +13,7 @@ export const SurahCard = ({
     return (
         <Link href={href}
             className={cn(
-                "group/card flex w-full min-w-[200px] cursor-pointer select-none items-center justify-between gap-5 rounded-md border border-border/50 px-4 py-4 hover:border-primary/50 transition-colors bg-card hover:bg-card/80",
+                "group/card flex w-full min-w-[200px] cursor-pointer select-none items-center justify-between gap-5 rounded-md border px-4 py-4 hover:border-primary/50 transition-colors bg-card hover:bg-card/80",
                 isActive && "active border-primary/30 bg-primary/10", cns?.card
             )}
         >
