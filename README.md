@@ -1,101 +1,80 @@
-# 📖 Quran Application
+# Quran Mazid (Beta)
 
-> A performant, feature-rich Quran reading experience built for everyone — from beginners to advanced readers.
+A modern Quran reading experience focused on speed, clarity, and flexible navigation.
 
----
+## Live Application
 
-## ✨ Key Features
+https://quran-mazid-beta.vercel.app
 
-### 🧭 Navigation & Reading Modes
-Multiple flexible navigation modes supported:
-- **Surah** — Browse by chapter
-- **Juz** — Navigate by part (1–30)
-- **Page** — Traditional Mushaf page layout
-- **Ruku** — Section-based navigation
-- **Manzil** — Weekly division navigation
-- **Sajda** — Jump to prostration verses
+## Overview
 
----
+Quran Mazid is a Next.js application that combines fast static delivery with dynamic data loading. It is designed to provide smooth reading on both desktop and mobile, while supporting multiple ways to browse and search ayahs.
 
-### 🎨 Personalization
-Real-time customization with persistent preferences:
-- Adjustable **Arabic font size**
-- Adjustable **Translation font size**
-- Selectable **Font family**
-- All preferences automatically saved via **local storage** — your settings survive page reloads
+## Core Features
 
----
+- Multiple navigation modes: Surah, Juz, Page, Ruku, Manzil, and Sajda.
+- Reading modes for both full translation and word-by-word learning.
+- User personalization with persisted preferences (font family, Arabic size, translation size).
+- Fast infinite scrolling and virtualization for large ayah lists.
+- MongoDB-backed search for flexible text queries.
 
-### 📚 Reading Support
-Catering to all levels of readers:
-- **Word-by-Word** mode — ideal for beginners learning Arabic
-- **Full Translation** mode — for comprehension and study
+## Performance Approach
 
----
+- First 10 ayahs per Surah are pre-rendered and CDN-friendly for fast initial load.
+- Remaining ayahs are fetched incrementally through server actions.
+- Virtualized rendering keeps the DOM lightweight for long reading sessions.
 
-### ⚡ Performance & Optimization
+## Architecture
 
-| Technique | Benefit |
-|-----------|---------|
-| TanStack Infinite Scrolling | Minimizes unnecessary data fetching, reduces bandwidth |
-| TanStack Virtualization | Keeps DOM lightweight, prevents performance degradation |
-| Static first 10 Ayahs per Surah | Served via CDN for rapid initial page load |
+- Primary content source: local server-side JSON datasets for deterministic, low-latency lookup.
+- Search source: MongoDB collections optimized for text search workflows.
+- UI data layer: TanStack Query (infinite loading) + TanStack Virtual (windowed rendering).
 
-The first 10 ayahs of each Surah are pre-rendered as **static content**, enabling CDN delivery and significantly improving Time-to-First-Byte (TTFB).
+## Tech Stack
 
----
+- Next.js 16 (App Router)
+- React 19
+- TypeScript
+- Bun runtime and package manager
+- MongoDB + Mongoose
+- Tailwind CSS + shadcn/ui primitives
 
-### 🗄️ Database Architecture
+## Getting Started (Bun)
 
-A **dual-database approach** for optimal performance and flexibility:
+### Prerequisites
 
-```
-Client Request
-     │
-     ├──▶ Server-Side DB (O(1) lookup)
-     │         └── Direct data retrieval, low latency
-     │
-     └──▶ MongoDB
-               └── Complex filtering & search queries
+- Bun installed
+- MongoDB connection available in `.env.local`
+
+### Install
+
+```bash
+bun install
 ```
 
-- **Server-side DB** — handles direct client-to-server data lookup, reducing internet latency
-- **MongoDB** — supports advanced filtering and search, ensuring speed and flexibility
+### Development
 
----
-
-### 🔄 Core Data Flow
-
-```
-1. Client sends request via URL parameters
-         ↓
-2. CDN serves first 10 ayahs instantly (no delay)
-         ↓
-3. User scrolls → subsequent ayahs fetched via O(1) server lookup
-         ↓
-4. Search queries → routed to MongoDB for advanced filtering
+```bash
+bun run dev
 ```
 
----
+### Type Check
 
-## 🚧 Current Status
+```bash
+bun run typecheck
+```
 
-This is an **MVP (Minimum Viable Product)** — a solid, functional foundation.
+### Production Build
 
-Several areas are identified for improvement and will be systematically addressed in subsequent iterations to elevate the product to the next level.
+```bash
+bun run build
+bun run start
+```
 
----
+## Project Status
 
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Data Fetching | TanStack Query (Infinite Scroll + Virtualization) |
-| Primary Database | Server-side DB (O(1) lookup) |
-| Search Database | MongoDB |
-| Content Delivery | CDN (static ayahs) |
-| Persistence | Local Storage |
+This project is currently in beta (MVP) and actively evolving. The current release focuses on reliable reading flow, navigation flexibility, and search performance.
 
 ---
 
-*Built with care for the Quran. May it be of benefit.* 🤲
+Built with care to support Quran study and daily recitation.
